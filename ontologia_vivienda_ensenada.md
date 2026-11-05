@@ -6,139 +6,107 @@
 ## Diagrama de clases y relaciones (Mermaid)
 
 ```mermaid
-classDiagram
-direction TB
+flowchart TD
 
-class Usuario {
-    +int id_usuario
-    +int permanencia_anios
-    +bool ingresos_estables
-    +bool posibilidad_mudanza
-}
+    subgraph CLASES["CLASES Y CONCEPTOS"]
+        Usuario["Usuario"]
+        SF["SituacionFinanciera"]
+        NH["NecesidadHabitacional"]
+        Vivienda["Vivienda"]
+        Casa["Casa"]
+        Departamento["Departamento"]
+        Zona["Zona"]
+        Precio["PrecioReferencia"]
+        Servicio["ServicioZona"]
+        Riesgo["RiesgoTerritorial"]
+        Opinion["OpinionComunitaria"]
+        Fuente["Fuente"]
+        Evaluacion["Evaluacion"]
+        Recomendacion["Recomendacion"]
+    end
 
-class SituacionFinanciera {
-    +float ingreso_mensual
-    +float gastos_mensuales
-    +float deudas_mensuales
-    +float ahorros_disponibles
-}
+    subgraph INSTANCIAS["INSTANCIAS DE ZONA"]
+        Centro["Centro de Ensenada"]
+        Valle["Valle Dorado"]
+        Sauzal["El Sauzal"]
+        Lomitas["Las Lomitas"]
+        Puerta["Puerta del Mar"]
+    end
 
-class NecesidadHabitacional {
-    +int numero_ocupantes
-    +bool requiere_transporte_publico
-    +string zona_trabajo_estudio
-    +string preferencia
-}
+    subgraph PROPIEDADES["PROPIEDADES Y ATRIBUTOS"]
+        AFin["ingresos, gastos, deudas, ahorros"]
+        ANec["permanencia, movilidad, preferencias"]
+        AViv["tipo, precio de compra, renta"]
+        APrecio["monto, operacion, fecha"]
+        AZona["nombre, municipio"]
+        ARegistro["tipo, fecha, estado o contenido"]
+        ARec["tipo, justificacion, advertencias"]
+    end
 
-class Vivienda {
-    +int id_vivienda
-    +float precio_compra
-    +float renta_mensual
-    +string direccion
-}
+    Casa -.->|es una| Vivienda
+    Departamento -.->|es una| Vivienda
 
-class Casa {
-}
+    Usuario -->|tiene| SF
+    Usuario -->|expresa| NH
+    Usuario -->|solicita| Evaluacion
 
-class Departamento {
-}
+    Evaluacion -->|analiza| Vivienda
+    Evaluacion -->|considera| Zona
+    Evaluacion -->|genera| Recomendacion
 
-class Zona {
-    +int id_zona
-    +string nombre_colonia
-    +string municipio
-}
+    Vivienda -->|se ubica en| Zona
 
-class PrecioReferencia {
-    +float monto_mxn
-    +string tipo_operacion
-    +string tipo_vivienda
-    +string fecha_consulta
-    +string tipo_estadistico
-}
+    Zona -->|registra precios| Precio
+    Zona -->|documenta servicios| Servicio
+    Zona -->|documenta riesgos| Riesgo
+    Zona -->|recibe opiniones| Opinion
 
-class ServicioZona {
-    +string tipo_servicio
-    +string disponibilidad
-    +string fecha_verificacion
-}
+    Precio -->|procede de| Fuente
+    Servicio -->|procede de| Fuente
+    Riesgo -->|procede de| Fuente
+    Opinion -->|procede de| Fuente
 
-class RiesgoTerritorial {
-    +string tipo_riesgo
-    +string nivel_reportado
-    +string fecha_evaluacion
-}
+    Centro -.->|instancia de| Zona
+    Valle -.->|instancia de| Zona
+    Sauzal -.->|instancia de| Zona
+    Lomitas -.->|instancia de| Zona
+    Puerta -.->|instancia de| Zona
 
-class Fuente {
-    +string nombre
-    +string url
-    +string fecha_publicacion
-}
+    SF -.->|tiene atributos| AFin
+    NH -.->|tiene atributos| ANec
+    Vivienda -.->|tiene atributos| AViv
+    Precio -.->|tiene atributos| APrecio
+    Zona -.->|tiene atributos| AZona
 
-class Evaluacion {
-    +int id_evaluacion
-    +string fecha
-    +float mensualidad_hipoteca
-    +float gastos_iniciales
-    +string estado
-}
+    Servicio -.->|tiene atributos| ARegistro
+    Riesgo -.->|tiene atributos| ARegistro
+    Opinion -.->|tiene atributos| ARegistro
 
-class Recomendacion {
-    +string tipo
-    +string justificacion
-    +string advertencias
-}
+    Recomendacion -.->|tiene atributos| ARec
 
-Vivienda <|-- Casa
-Vivienda <|-- Departamento
+    classDef concepto fill:#dbeafe,stroke:#2563eb,color:#172554
+    classDef instancia fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef propiedad fill:#fef3c7,stroke:#d97706,color:#78350f
 
-Usuario "1" --> "0..*" Evaluacion : solicita
-
-Evaluacion "1" *-- "1" SituacionFinanciera : utiliza
-Evaluacion "1" *-- "1" NecesidadHabitacional : considera
-
-Evaluacion "1" --> "0..1" Vivienda : analiza
-Evaluacion "1" --> "0..1" Zona : selecciona
-Evaluacion "1" *-- "0..*" Recomendacion : genera
-
-Vivienda "0..*" --> "1" Zona : ubicada_en
-
-Zona "1" o-- "0..*" PrecioReferencia : dispone_de
-Zona "1" o-- "0..*" ServicioZona : registra
-Zona "1" o-- "0..*" RiesgoTerritorial : presenta_registros
-
-PrecioReferencia "0..*" --> "1" Fuente : documentado_en
-ServicioZona "0..*" --> "1" Fuente : sustentado_por
-RiesgoTerritorial "0..*" --> "1" Fuente : sustentado_por
+    class Usuario,SF,NH,Vivienda,Casa,Departamento,Zona,Precio,Servicio,Riesgo,Opinion,Fuente,Evaluacion,Recomendacion concepto
+    class Centro,Valle,Sauzal,Lomitas,Puerta instancia
+    class AFin,ANec,AViv,APrecio,AZona,ARegistro,ARec propiedad
 ```
 
 ## Descripción de los conceptos
 
-| Clase | Función en el dominio |
-| --- | --- |
-| **Usuario** | Persona que solicita orientación. |
-| **SituacionFinanciera** | Información económica disponible para una evaluación. |
-| **NecesidadHabitacional** | Preferencias y necesidades personales del usuario. |
-| **Vivienda** | Inmueble que se desea analizar, cuando se dispone de uno concreto. |
-| **Casa**, **Departamento** | Especializaciones («es-un») de Vivienda. |
-| **Zona** | Colonia o sector de Ensenada donde se ubica la vivienda. |
-| **PrecioReferencia** | Información agregada del mercado; no equivale al precio de una vivienda específica. |
-| **ServicioZona** | Registro documentado sobre disponibilidad de un servicio en una zona. |
-| **RiesgoTerritorial** | Registro documentado de un riesgo, sin presumir que toda la zona tiene las mismas condiciones. |
-| **Fuente** | Procedencia verificable de información territorial y de precios. |
-| **Evaluacion** | Vincula datos y alternativas para su análisis. |
-| **Recomendacion** | Posible conclusión de la evaluación, con explicación y advertencias. |
+La ontología organiza los conceptos necesarios para el funcionamiento del Sistema Experto de Asesoría para la Renta o Compra de Vivienda en Ensenada.
 
-## Precisiones de modelado
+Las clases principales representan al usuario, su situación financiera, las viviendas, las zonas de la ciudad y los resultados de las evaluaciones.
 
-- La relación **Casa/Departamento → Vivienda** es una **generalización o especialización**, no un paso del algoritmo.
-- Una evaluación puede analizar una vivienda específica (`0..1`) o una zona (`0..1`) sin propiedad identificada. En la implementación se debe exigir información suficiente para emitir una recomendación.
-- Los precios de referencia deben conservar su **fecha, tipo de operación y fuente**. La falta de un dato no implica que sea cero.
-- **ServicioZona** y **RiesgoTerritorial** son registros de información; la ausencia de registros **no prueba** la ausencia de riesgos o la disponibilidad de servicios.
-- Esta es una **ontología conceptual expresada como diagrama de clases Mermaid**; las reglas de producción SI–ENTONCES y su ejecución se documentan por separado en la base de conocimiento y en el prototipo Python.
+La clase Vivienda presenta una jerarquía de especialización, ya que Casa y Departamento son tipos de vivienda.
 
-## Texto sugerido para el reporte
+Las zonas Centro, Valle Dorado, El Sauzal, Las Lomitas y Puerta del Mar se representan como instancias de la clase Zona.
 
-**Figura 1. Ontología del Sistema Experto de Asesoría para la Renta o Compra de Vivienda en Ensenada.**
+Los precios de referencia se mantienen separados de las viviendas individuales, debido a que los valores recopilados durante la investigación no necesariamente representan el costo de una propiedad específica.
 
-La ontología representa los principales conceptos que intervienen en la decisión de rentar o comprar una vivienda, incluyendo los datos económicos y personales del usuario, las características de los inmuebles, la información territorial y las recomendaciones generadas. La clase `Vivienda` presenta una jerarquía de especialización mediante `Casa` y `Departamento`. Las demás clases se relacionan mediante asociaciones que permiten identificar cómo se utiliza la información durante una evaluación. También se incluyen relaciones con fuentes documentales para identificar la procedencia de los precios de referencia, servicios y riesgos territoriales.
+Asimismo, las opiniones comunitarias se representan de manera independiente a los riesgos territoriales documentados, evitando considerar comentarios personales como estadísticas oficiales de seguridad.
+
+Las conexiones del diagrama permiten identificar cómo se relacionan los conceptos y qué información deberá utilizarse posteriormente durante el proceso de evaluación.
+
+La ontología servirá como fundamento para organizar la base de conocimiento y facilitar la implementación de las reglas lógicas del Sistema Experto.
