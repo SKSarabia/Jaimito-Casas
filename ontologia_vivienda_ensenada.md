@@ -6,91 +6,34 @@
 ## Diagrama de clases y relaciones (Mermaid)
 
 ```mermaid
-flowchart TD
+flowchart LR
+    Usuario[Usuario] -->|tiene| Finanzas[Situacion Financiera]
+    Usuario -->|expresa| Necesidad[Necesidad Habitacional]
+    Usuario -->|solicita| Evaluacion[Evaluacion]
 
-    subgraph CLASES["CLASES Y CONCEPTOS"]
-        Usuario["Usuario"]
-        SF["SituacionFinanciera"]
-        NH["NecesidadHabitacional"]
-        Vivienda["Vivienda"]
-        Casa["Casa"]
-        Departamento["Departamento"]
-        Zona["Zona"]
-        Precio["PrecioReferencia"]
-        Servicio["ServicioZona"]
-        Riesgo["RiesgoTerritorial"]
-        Opinion["OpinionComunitaria"]
-        Fuente["Fuente"]
-        Evaluacion["Evaluacion"]
-        Recomendacion["Recomendacion"]
-    end
+    Evaluacion -->|analiza| Vivienda[Vivienda]
+    Evaluacion -->|considera| Zona[Zona]
+    Evaluacion -->|genera| Recomendacion[Recomendacion]
 
-    subgraph INSTANCIAS["INSTANCIAS DE ZONA"]
-        Centro["Centro de Ensenada"]
-        Valle["Valle Dorado"]
-        Sauzal["El Sauzal"]
-        Lomitas["Las Lomitas"]
-        Puerta["Puerta del Mar"]
-    end
-
-    subgraph PROPIEDADES["PROPIEDADES Y ATRIBUTOS"]
-        AFin["ingresos, gastos, deudas, ahorros"]
-        ANec["permanencia, movilidad, preferencias"]
-        AViv["tipo, precio de compra, renta"]
-        APrecio["monto, operacion, fecha"]
-        AZona["nombre, municipio"]
-        ARegistro["tipo, fecha, estado o contenido"]
-        ARec["tipo, justificacion, advertencias"]
-    end
-
-    Casa -.->|es una| Vivienda
-    Departamento -.->|es una| Vivienda
-
-    Usuario -->|tiene| SF
-    Usuario -->|expresa| NH
-    Usuario -->|solicita| Evaluacion
-
-    Evaluacion -->|analiza| Vivienda
-    Evaluacion -->|considera| Zona
-    Evaluacion -->|genera| Recomendacion
-
+    Casa[Casa] -->|es una| Vivienda
+    Departamento[Departamento] -->|es una| Vivienda
     Vivienda -->|se ubica en| Zona
 
-    Zona -->|registra precios| Precio
-    Zona -->|documenta servicios| Servicio
-    Zona -->|documenta riesgos| Riesgo
-    Zona -->|recibe opiniones| Opinion
+    Zona -->|registra| Precio[Precio de referencia]
+    Zona -->|documenta| Servicio[Servicio de la zona]
+    Zona -->|documenta| Riesgo[Riesgo territorial]
+    Zona -->|recibe| Opinion[Opinion comunitaria]
 
-    Precio -->|procede de| Fuente
+    Precio -->|procede de| Fuente[Fuente]
     Servicio -->|procede de| Fuente
     Riesgo -->|procede de| Fuente
     Opinion -->|procede de| Fuente
 
-    Centro -.->|instancia de| Zona
-    Valle -.->|instancia de| Zona
-    Sauzal -.->|instancia de| Zona
-    Lomitas -.->|instancia de| Zona
-    Puerta -.->|instancia de| Zona
-
-    SF -.->|tiene atributos| AFin
-    NH -.->|tiene atributos| ANec
-    Vivienda -.->|tiene atributos| AViv
-    Precio -.->|tiene atributos| APrecio
-    Zona -.->|tiene atributos| AZona
-
-    Servicio -.->|tiene atributos| ARegistro
-    Riesgo -.->|tiene atributos| ARegistro
-    Opinion -.->|tiene atributos| ARegistro
-
-    Recomendacion -.->|tiene atributos| ARec
-
-    classDef concepto fill:#dbeafe,stroke:#2563eb,color:#172554
-    classDef instancia fill:#dcfce7,stroke:#16a34a,color:#14532d
-    classDef propiedad fill:#fef3c7,stroke:#d97706,color:#78350f
-
-    class Usuario,SF,NH,Vivienda,Casa,Departamento,Zona,Precio,Servicio,Riesgo,Opinion,Fuente,Evaluacion,Recomendacion concepto
-    class Centro,Valle,Sauzal,Lomitas,Puerta instancia
-    class AFin,ANec,AViv,APrecio,AZona,ARegistro,ARec propiedad
+    Centro[Centro de Ensenada] -.->|es una| Zona
+    Valle[Valle Dorado] -.->|es una| Zona
+    Sauzal[El Sauzal] -.->|es una| Zona
+    Lomitas[Las Lomitas] -.->|es una| Zona
+    Puerta[Puerta del Mar] -.->|es una| Zona
 ```
 
 ## Descripción de los conceptos
