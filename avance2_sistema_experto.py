@@ -79,4 +79,3 @@ for identificador, informacion in hechos.items():
 
 # Mostrar la cantidad total
 print(f"\nTotal de hechos registrados: {len(hechos)}")
-
